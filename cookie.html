@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Test! 🍪</title>
+</head>
+
+<body>
+
+    <h2>Enter Your Username:</h2>
+    <form id="usernameForm">
+        <input type="text" id="usernameInput" placeholder="Your Username" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="displayUsername"></div>
+
+    <script> 
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Function to get a cookie by name
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Function to display username
+        function displayUsername() {
+            var usernameInput = document.getElementById('usernameInput');
+            var displayDiv = document.getElementById('displayUsername');
+
+            // Check if username is present in cookies
+            var username = getCookie('username');
+            if (username) {
+                displayDiv.innerHTML = 'Welcome back, ' + username + '!';
+            }
+
+            // Add event listener for form submission
+            document.getElementById('usernameForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                username = usernameInput.value;
+                setCookie('username', username, 365); // Store username in cookie for 365 days
+                displayDiv.innerHTML = 'Hello, ' + username + '!';
+            });
+        }
+
+        // Call the displayUsername function when the page loads
+        window.onload = displayUsername;
+    </script>
+
+</body>
+
+</html>
